@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'core.account',
     'core.auth',
     'core.event',
+    'core.board',
 ]
 
 MIDDLEWARE = [
