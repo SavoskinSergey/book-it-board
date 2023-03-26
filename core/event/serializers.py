@@ -9,24 +9,24 @@ from core.account.serializers import UserSerializer
 
 class EventSerializer(AbstractSerializer):
     admin = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='public_id')
-    # liked = serializers.SerializerMethodField()
-    # likes_count = serializers.SerializerMethodField()
+    subscribed = serializers.SerializerMethodField()
+    subscribes_count = serializers.SerializerMethodField()
 
-    # def get_liked(self, instance):
+    def get_subscribed(self, instance):
 
-    #     request = self.context.get('request', None)
+        request = self.context.get('request', None)
 
-    #     if request is None or request.user.is_anonymous:
-    #         return False
+        if request is None or request.user.is_anonymous:
+            return False
 
-    #     return request.user.has_liked(instance)
+        return request.user.has_subscribed(instance)
 
-    # def get_likes_count(self, instance):
-    #     return instance.liked_by.count()
+    def get_subscribes_count(self, instance):
+        return instance.subscribed_by.count()
 
     def validate_author(self, value):
         if self.context["request"].user != value:
-            raise ValidationError("You can't create a post for another user.")
+            raise ValidationError("You can't create a event for another user.")
         return value
 
     def update(self, instance, validated_data):
@@ -39,15 +39,15 @@ class EventSerializer(AbstractSerializer):
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        author = User.objects.get_object_by_public_id(rep["author"])
-        rep["author"] = UserSerializer(author).data
+        admin = User.objects.get_object_by_public_id(rep["admin"])
+        rep["admin"] = UserSerializer(admin).data
 
         return rep
 
     class Meta:
         model = Event
         # List of all the fields that can be included in a request or a response
-        fields = ['id', 'author', 'body', 'edited',
-                #    'liked', 'likes_count', 
+        fields = ['id', 'admin', 'body', 'edited',
+                   'subscribed', 'subscribes_count', 
                    'created', 'updated']
         read_only_fields = ["edited"]

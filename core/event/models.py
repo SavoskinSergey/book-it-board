@@ -15,4 +15,4 @@ class Event(AbstractModel):
     objects = EventManager()
 
     def __str__(self):
-        return f"{self.author.name} {self.body}"
+        return f"{self.admin.name} {self.body}"

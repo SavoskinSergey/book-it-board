@@ -71,14 +71,14 @@ class User(AbstractModel, AbstractBaseUser, PermissionsMixin):
     def name(self):
         return f'{self.first_name} {self.last_name}'
 
-    # def like(self, post):
-    #     """Like `post` if it hasn't been done yet"""
-    #     return self.posts_liked.add(post)
+    def subscribe(self, event):
+        """Subscribe 'event' if it hasn't been done yet"""
+        return self.events_subscribed.add(event)
 
-    # def remove_like(self, post):
-    #     """Remove a like from a `post`"""
-    #     return self.posts_liked.remove(post)
+    def remove_subscribe(self, event):
+        """Remove a subscribe from a 'event'"""
+        return self.events_subscribed.remove(event)
 
-    # def has_liked(self, post):
-    #     """Return True if the user has liked a `post`; else False"""
-    #     return self.posts_liked.filter(pk=post.pk).exists()
+    def has_subscribed(self, event):
+        """Return True if the user has subscribed a 'event'; else False"""
+        return self.events_subscribed.filter(pk=event.pk).exists()
