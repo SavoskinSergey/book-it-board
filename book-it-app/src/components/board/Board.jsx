@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { format } from "timeago.js";
-import { LikeOutlined, LikeFilled } from "@ant-design/icons";
 import { Image, Card, Dropdown } from "react-bootstrap";
 import axiosService from "../../helpers/axios";
 import { getUser } from "../../hooks/user.actions";
@@ -14,15 +13,6 @@ function Board(props) {
 
   const user = getUser();
 
-  const handleLikeClick = (action) => {
-    axiosService
-      .post(`/event/${eventId}/board/${board.id}/${action}/`)
-      .then(() => {
-        refresh();
-      })
-      .catch((err) => console.error(err));
-  };
-
   const handleDelete = () => {
     axiosService
       .delete(`/event/${eventId}/board/${board.id}/`)
@@ -31,7 +21,7 @@ function Board(props) {
           type: "danger",
           message: "Board supply deleted 🚀",
           show: true,
-          title: "Board Deleted",
+          title: "Board support Deleted",
         });
         refresh();
       })
@@ -83,49 +73,7 @@ function Board(props) {
           )}
         </Card.Title>
         <Card.Text>{board.comment}</Card.Text>
-        <div className="d-flex flex-row justify-content-between">
-          <div className="d-flex flex-row">
-            <LikeFilled
-              style={{
-                color: "#fff",
-                backgroundColor: "#0D6EFD",
-                borderRadius: "50%",
-                width: "18px",
-                height: "18px",
-                fontSize: "75%",
-                padding: "2px",
-                margin: "3px",
-              }}
-            />
-            <p className="ms-1 fs-6">
-              <small>{board.likes_count} like</small>
-            </p>
-          </div>
-        </div>
       </Card.Body>
-      <Card.Footer className="d-flex bg-white w-50 justify-content-between border-0">
-        <div className="d-flex flex-row">
-          <LikeOutlined
-            style={{
-              width: "24px",
-              height: "24px",
-              padding: "2px",
-              fontSize: "20px",
-              color: board.liked ? "#0D6EFD" : "#C4C4C4",
-            }}
-            onClick={() => {
-              if (board.liked) {
-                handleLikeClick("remove_like");
-              } else {
-                handleLikeClick("like");
-              }
-            }}
-          />
-          <p className="ms-1">
-            <small>Like</small>
-          </p>
-        </div>
-      </Card.Footer>
     </Card>
   );
 }

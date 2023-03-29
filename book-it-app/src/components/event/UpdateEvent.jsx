@@ -17,21 +17,20 @@ function UpdateEvent(props) {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const updatePostForm = event.currentTarget;
+  const handleSubmit = (_event) => {
+    _event.preventDefault();
+    const updateEventForm = _event.currentTarget;
 
-    if (updatePostForm.checkValidity() === false) {
-      event.stopPropagation();
+    if (updateEventForm.checkValidity() === false) {
+      _event.stopPropagation();
     }
 
     setValidated(true);
 
     const data = {
       admin: form.admin,
-      body: form.body,
+      body: form.body,    
     };
-
     axiosService
       .put(`/event/${event.id}/`, data)
       .then(() => {
@@ -69,13 +68,13 @@ function UpdateEvent(props) {
             noValidate
             validated={validated}
             onSubmit={handleSubmit}
-            data-testid="update-post-form"
+            data-testid="update-event-form"
           >
             <Form.Group className="mb-3">
               <Form.Control
                 name="body"
                 value={form.body}
-                data-testid="post-body-field"
+                data-testid="event-body-field"
                 onChange={(e) => setForm({ ...form, body: e.target.value })}
                 as="textarea"
                 rows={3}
@@ -85,7 +84,7 @@ function UpdateEvent(props) {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            data-testid="update-post-submit"
+            data-testid="update-event-submit"
             variant="primary"
             onClick={handleSubmit}
           >

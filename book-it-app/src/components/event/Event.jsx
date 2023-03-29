@@ -106,7 +106,7 @@ function Event(props) {
               <p className="ms-1 fs-6">
                 <small>
                   <Link to={`/event/${event.id}/`}>
-                    {event.boards_count} boards
+                    {event.boards_count} подробнее..
                   </Link>
                 </small>
               </p>
@@ -132,7 +132,7 @@ function Event(props) {
               }}
             />
             <p className="ms-1">
-              <small>Sub</small>
+              <small>Участники</small>
             </p>
           </div>
           {!isSingleEvent && (
@@ -147,7 +147,7 @@ function Event(props) {
                 }}
               />
               <p className="ms-1 mb-0">
-                <small>Comment</small>
+                <small>Поддержка</small>
               </p>
             </div>
           )}

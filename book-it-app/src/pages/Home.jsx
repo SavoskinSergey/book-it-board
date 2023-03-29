@@ -32,6 +32,7 @@ function Home() {
                 width={52}
                 height={52}
                 className="my-2"
+                alt="аватарка для создания поста"
               />
             </Col>
             <Col sm={10} className="flex-grow-1">

@@ -13,7 +13,7 @@ class BoardSerializer(AbstractSerializer):
     event = serializers.SlugRelatedField(queryset=Event.objects.all(), slug_field='public_id')
 
     def validate_operator(self, value):
-        if self.context["request"].user != value:
+        if self.context['request'].user != value:
             raise ValidationError("You can't create a support board for another user.")
         return value
 
@@ -32,8 +32,8 @@ class BoardSerializer(AbstractSerializer):
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        operator = User.objects.get_object_by_public_id(rep["operator"])
-        rep["operator"] = UserSerializer(operator).data
+        operator = User.objects.get_object_by_public_id(rep['operator'])
+        rep['operator'] = UserSerializer(operator, context=self.context).data
 
         return rep
 
@@ -41,4 +41,4 @@ class BoardSerializer(AbstractSerializer):
         model = Board
         # List of all the fields that can be included in a request or a response
         fields = ['id', 'event', 'operator', 'comment', 'edited', 'created', 'updated']
-        read_only_fields = ["edited"]
+        read_only_fields = ['edited']

@@ -11,9 +11,12 @@ class EventSerializer(AbstractSerializer):
     admin = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='public_id')
     subscribed = serializers.SerializerMethodField()
     subscribes_count = serializers.SerializerMethodField()
+    boards_count = serializers.SerializerMethodField()
 
+    def get_boards_count(self, instance):
+        return instance.board_set.count()
+    
     def get_subscribed(self, instance):
-
         request = self.context.get('request', None)
 
         if request is None or request.user.is_anonymous:
@@ -24,8 +27,8 @@ class EventSerializer(AbstractSerializer):
     def get_subscribes_count(self, instance):
         return instance.subscribed_by.count()
 
-    def validate_author(self, value):
-        if self.context["request"].user != value:
+    def validate_admin(self, value):
+        if self.context['request'].user != value:
             raise ValidationError("You can't create a event for another user.")
         return value
 
@@ -39,8 +42,8 @@ class EventSerializer(AbstractSerializer):
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        admin = User.objects.get_object_by_public_id(rep["admin"])
-        rep["admin"] = UserSerializer(admin).data
+        admin = User.objects.get_object_by_public_id(rep['admin'])
+        rep['admin'] = UserSerializer(admin, context=self.context).data
 
         return rep
 
@@ -48,6 +51,7 @@ class EventSerializer(AbstractSerializer):
         model = Event
         # List of all the fields that can be included in a request or a response
         fields = ['id', 'admin', 'body', 'edited',
-                   'subscribed', 'subscribes_count', 
-                   'created', 'updated']
-        read_only_fields = ["edited"]
+                    'subscribed', 'subscribes_count', 
+                    'boards_count',
+                    'created', 'updated']
+        read_only_fields = ['edited']

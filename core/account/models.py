@@ -4,6 +4,12 @@ from django.db import models
 from core.abstract.models import AbstractModel, AbstractManager
 from phonenumber_field.modelfields import PhoneNumberField
 
+
+def user_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    return f'user_{instance.public_id}/{filename}'
+
+
 class UserManager(BaseUserManager, AbstractManager):
 
     def create_user(self, username, email, password=None, **kwargs):
@@ -51,7 +57,7 @@ class User(AbstractModel, AbstractBaseUser, PermissionsMixin):
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
 
-    avatar = models.ImageField(null=True)
+    avatar = models.ImageField(null=True, blank=True, upload_to=user_directory_path)
     note = models.TextField(null=True, blank=True)
 
     events_subscribed = models.ManyToManyField(
@@ -66,6 +72,7 @@ class User(AbstractModel, AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f'{self.email}'
+    
 
     @property
     def name(self):

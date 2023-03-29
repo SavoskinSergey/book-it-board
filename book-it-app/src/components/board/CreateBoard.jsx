@@ -20,9 +20,9 @@ function CreateBoard(props) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const createCommentForm = event.currentTarget;
+    const createBoardForm = event.currentTarget;
 
-    if (createCommentForm.checkValidity() === false) {
+    if (createBoardForm.checkValidity() === false) {
       event.stopPropagation();
     }
 
@@ -87,7 +87,7 @@ function CreateBoard(props) {
           variant="primary"
           data-testid="create-board-submit"
           onClick={handleSubmit}
-          disabled={!form.body}
+          disabled={!form.comment}
           size="small"
         >
           Board support

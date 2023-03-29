@@ -34,7 +34,7 @@ function useUserActions() {
   // Edit the user
   function edit(data, userId) {
     return axiosService
-      .patch(`${baseURL}/user/${userId}/`, data, {
+      .patch(`${baseURL}/account/${userId}/`, data, {
         headers: {
           "content-type": "multipart/form-data",
         },
