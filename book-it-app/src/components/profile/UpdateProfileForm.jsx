@@ -58,6 +58,7 @@ function UpdateProfileForm(props) {
           show: true,
           title: "Profile updated",
         });
+        // console.log(formData);
         navigate(-1);
       })
       .catch((err) => {
@@ -89,6 +90,7 @@ function UpdateProfileForm(props) {
           type="file"
           size="sm"
         />
+        
         <Form.Control.Feedback type="invalid">
           This file is required.
         </Form.Control.Feedback>

@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
@@ -8,10 +9,13 @@ from core.account.serializers import UserSerializer
 
 
 class EventSerializer(AbstractSerializer):
-    admin = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='public_id')
+    admin = serializers.SlugRelatedField(
+        queryset=User.objects.all(), slug_field='public_id'
+    )
     subscribed = serializers.SerializerMethodField()
     subscribes_count = serializers.SerializerMethodField()
     boards_count = serializers.SerializerMethodField()
+
 
     def get_boards_count(self, instance):
         return instance.board_set.count()
@@ -41,17 +45,31 @@ class EventSerializer(AbstractSerializer):
         return instance
 
     def to_representation(self, instance):
-        rep = super().to_representation(instance)
-        admin = User.objects.get_object_by_public_id(rep['admin'])
-        rep['admin'] = UserSerializer(admin, context=self.context).data
-
-        return rep
+        representation = super().to_representation(instance)
+        admin = User.objects.get_object_by_public_id(representation['admin'])
+        representation['admin'] = UserSerializer(admin, context=self.context).data
+        if not representation['image']:
+            representation['image'] = settings.DEFAULT_AVATAR_URL
+            return representation
+        if settings.DEBUG:  # debug enabled for dev
+            request = self.context.get('request')
+            representation['image'] = request.build_absolute_uri(
+                representation['image']
+            )
+        return representation
 
     class Meta:
         model = Event
         # List of all the fields that can be included in a request or a response
-        fields = ['id', 'admin', 'body', 'edited',
-                    'subscribed', 'subscribes_count', 
-                    'boards_count',
-                    'created', 'updated']
+        fields = [
+            'id',
+            'admin',
+            'body',
+            'edited',
+            'image',
+            'subscribed',
+            'subscribes_count', 
+            'boards_count',
+            'created', 
+            'updated']
         read_only_fields = ['edited']

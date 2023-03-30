@@ -59,6 +59,12 @@ function Event(props) {
                 height={48}
                 className="me-2 border border-primary border-2"
               />
+              <Image
+                src={event.image}
+                width={480}
+                height={320}
+                className="me-2 border border-primary border-2"
+              />
               <div className="d-flex flex-column justify-content-start align-self-center mt-2">
                 <p className="fs-6 m-0">{event.admin.username}</p>
                 <p className="fs-6 fw-lighter">

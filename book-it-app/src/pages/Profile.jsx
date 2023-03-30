@@ -13,7 +13,7 @@ function Profile() {
   const user = useSWR(`/account/${profileId}/`, fetcher);
 
   const events = useSWR(`/event/?admin__public_id=${profileId}`, fetcher, {
-    refreshInterval: 20000,
+    refreshInterval: 1000,
   });
 
   return (
