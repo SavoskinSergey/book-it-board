@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Button, Modal, Form, Dropdown } from "react-bootstrap";
+import { Button, Modal, Form, Dropdown, Image } from "react-bootstrap";
 import axiosService from "../../helpers/axios";
 import { Context } from "../Layout";
 
@@ -7,10 +7,15 @@ function UpdateEvent(props) {
   const { event, refresh } = props;
   const [show, setShow] = useState(false);
   const [validated, setValidated] = useState(false);
+
   const [form, setForm] = useState({
     admin: event.admin.id,
     body: event.body,
+    image: event.image,
   });
+  
+
+  const [image, setImage] = useState();
 
   const { setToaster } = useContext(Context);
 
@@ -29,10 +34,30 @@ function UpdateEvent(props) {
 
     const data = {
       admin: form.admin,
-      body: form.body,    
+      body: form.body, 
+      image: form.image, 
     };
+    
+
+    const formData = new FormData();
+
+    // Checking for null values in the form and removing it.
+
+    Object.keys(data).forEach((key) => {
+      if (data[key]) {
+        formData.append(key, data[key]);
+      }
+    });
+
+    if (image) {
+      formData.append("image", image);
+    }
     axiosService
-      .put(`/event/${event.id}/`, data)
+      .patch(`/event/${event.id}/`, formData, {
+        headers: {
+          "content-type": "multipart/form-data",
+        }
+      })
       .then(() => {
         handleClose();
         setToaster({
@@ -70,6 +95,31 @@ function UpdateEvent(props) {
             onSubmit={handleSubmit}
             data-testid="update-event-form"
           >
+
+
+<Form.Group className="mb-3 d-flex flex-column">
+        <Form.Label className="text-center">Image</Form.Label>
+        <Image
+          src={form.image}
+          // roundedCircle
+          width={220}
+          height={180}
+          className="m-2 border border-primary border-2 align-self-center"
+        />
+        <Form.Control
+        
+          onChange={(e) => setImage(e.target.files[0])}
+          // onChange={(e) => setForm(...form, image: e.target.files[0])}
+          className="w-50 align-self-center"
+          type="file"
+          size="sm"
+        />
+        
+        <Form.Control.Feedback type="invalid">
+          This file is required.
+        </Form.Control.Feedback>
+      </Form.Group>
+
             <Form.Group className="mb-3">
               <Form.Control
                 name="body"

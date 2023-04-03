@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { Button, Modal, Form } from "react-bootstrap";
+import { Button, Modal, Form, Image } from "react-bootstrap";
 import axiosService from "../../helpers/axios";
 import { getUser } from "../../hooks/user.actions";
 import { Context } from "../Layout";
@@ -11,6 +11,7 @@ function CreateEvent(props) {
   const [form, setForm] = useState({
     admin: "",
     body: "",
+    image: null,
   });
 
   const { setToaster } = useContext(Context);
@@ -33,10 +34,15 @@ function CreateEvent(props) {
     const data = {
       admin: user.id,
       body: form.body,
+      image: form.image,
     };
 
     axiosService
-      .post("/event/", data)
+      .post("/event/", data, {
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+      })
       .then(() => {
         handleClose();
         setToaster({
@@ -81,6 +87,29 @@ function CreateEvent(props) {
             onSubmit={handleSubmit}
             data-testid="create-event-form"
           >
+
+<Form.Group className="mb-3 d-flex flex-column">
+        <Form.Label className="text-center">Image</Form.Label>
+        <Image
+          src={form.image}
+          // roundedCircle
+          width={420}
+          height={280}
+          className="m-2 border border-primary border-2 align-self-center"
+        />
+        <Form.Control
+        
+          onChange={(e) => setForm({...form, image: e.target.files[0]})}
+          className="w-50 align-self-center"
+          type="file"
+          size="sm"
+        />
+        
+        <Form.Control.Feedback type="invalid">
+          This file is required.
+        </Form.Control.Feedback>
+      </Form.Group>
+
             <Form.Group className="mb-3">
               <Form.Control
                 name="body"

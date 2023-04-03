@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
 from django.core.cache import cache
+from django.utils.datastructures import MultiValueDictKeyError
 
 from core.abstract.viewsets import AbstractViewSet
 from core.event.models import Event
@@ -10,7 +11,7 @@ from core.auth.permissions import UserPermission
 
 
 class EventViewSet(AbstractViewSet):
-    http_method_names = ('post', 'get', 'put', 'delete')
+    http_method_names = ('post', 'get', 'put', 'patch', 'delete')
     permission_classes = (UserPermission,)
     serializer_class = EventSerializer
     filterset_fields = ['admin__public_id']
@@ -27,19 +28,16 @@ class EventViewSet(AbstractViewSet):
 
     def list(self, request, *args, **kwargs):
         try:
-            admin_id=request.GET['admin__public_id']
-        
-            print(request.GET['admin__public_id'])
-            event_objects = cache.get(''.join(['event_objects_',admin_id]))
+            admin_id = request.GET['admin__public_id']
+            event_objects = cache.get(''.join(['event_objects_', admin_id]))
             if event_objects is None:
                 event_objects = self.filter_queryset(self.get_queryset())
-                cache.set(''.join(['event_objects_',admin_id]), event_objects)
-        except:
+                cache.set(''.join(['event_objects_', admin_id]), event_objects)
+        except MultiValueDictKeyError:
             event_objects = cache.get('event_objects')
             if event_objects is None:
                 event_objects = self.get_queryset()
                 cache.set('event_objects', event_objects)
-        print(self.get_queryset())
         # if event_objects is None:
         #     event_objects = self.filter_queryset(self.get_queryset())
         #     cache.set('event_objects', event_objects)
@@ -56,6 +54,7 @@ class EventViewSet(AbstractViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
+        cache.delete(''.join(['event_objects_', request.data['admin']]))
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @action(methods=['post'], detail=True)

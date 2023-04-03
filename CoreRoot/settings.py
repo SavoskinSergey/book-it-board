@@ -183,7 +183,7 @@ CACHES = {
     }
 }
 
-CACHE_TTL = 60 * 5
+CACHE_TTL = 60 * 1
 
 # CORS settings
 

@@ -33,11 +33,13 @@ class AbstractModel(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ['-updated', ]
 
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         app_label = self._meta.app_label
+        print(app_label)
         if app_label in ['core_event', 'core_board']:
             _delete_cached_objects(app_label)
         return super(AbstractModel, self).save(
