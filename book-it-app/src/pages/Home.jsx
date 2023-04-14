@@ -6,13 +6,14 @@ import { fetcher } from "../helpers/axios";
 import { getUser } from "../hooks/user.actions";
 import { Event } from "../components/event";
 import CreateEvent from "../components/event/CreateEvent";
-import ProfileCard from "../components/profile/ProfileCard";
+// import ProfileCard from "../components/profile/ProfileCard";
+import Slider from "../components/Slider";
 
 function Home() {
   const events = useSWR("/event/", fetcher, {
     refreshInterval: 20000,
   });
-  const profiles = useSWR("/account/?limit=5", fetcher);
+  // const profiles = useSWR("/account/?limit=5", fetcher);
 
   const user = getUser();
 
@@ -23,7 +24,7 @@ function Home() {
   return (
     <Layout>
       <Row className="justify-content-evenly">
-        <Col sm={7}>
+        <Col sm={8}>
           <Row className="border rounded  align-items-center">
             <Col className="flex-shrink-1">
               <Image
@@ -40,12 +41,15 @@ function Home() {
             </Col>
           </Row>
           <Row className="my-4">
+            <Slider events={events} title="Список постов"/>
+          </Row>
+          <Row className="my-4">
             {events.data?.results.map((event, index) => (
               <Event key={index} event={event} refresh={events.mutate} />
             ))}
           </Row>
         </Col>
-        <Col sm={3} className="border rounded py-4 h-50">
+        {/* <Col sm={3} className="border rounded py-4 h-50">
           <h4 className="font-weight-bold text-center">Все пользователи</h4>
           <div className="d-flex flex-column">
             {profiles.data &&
@@ -53,7 +57,7 @@ function Home() {
                 <ProfileCard key={index} user={profile} />
               ))}
           </div>
-        </Col>
+        </Col> */}
       </Row>
     </Layout>
   );

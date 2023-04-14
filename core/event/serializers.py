@@ -70,6 +70,8 @@ class EventSerializer(AbstractSerializer):
             'subscribed',
             'subscribes_count', 
             'boards_count',
-            'created', 
+            'created',
+            'event_data',
+            'event_limit',
             'updated']
         read_only_fields = ['edited']

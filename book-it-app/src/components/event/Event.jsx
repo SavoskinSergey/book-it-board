@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { format } from "timeago.js";
 import { LikeFilled, CommentOutlined, LikeOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import moment from "moment-timezone";
 import { Image, Card, Dropdown } from "react-bootstrap";
 import axiosService from "../../helpers/axios";
 import { getUser } from "../../hooks/user.actions";
@@ -14,6 +15,9 @@ function Event(props) {
   const { setToaster } = useContext(Context);
 
   const user = getUser();
+  // const date = moment(event.event_data);
+  // const date = moment("2014-06-01T12:00:00Z").format("MM YYYY");
+  const date = moment(event.event_data).format("DD.MM YYYY старт в hh:mm");
 
   const handleLikeClick = (action) => {
     axiosService
@@ -90,6 +94,12 @@ function Event(props) {
             )}
           </Card.Title>
           <Card.Text>{event.body}</Card.Text>
+
+
+          <Card.Text>{date}</Card.Text>
+
+
+          <Card.Text>{event.event_limit}</Card.Text>
           <div className="d-flex flex-row justify-content-between">
             <div className="d-flex flex-row">
               <LikeFilled
@@ -105,14 +115,14 @@ function Event(props) {
                 }}
               />
               <p className="ms-1 fs-6">
-                <small>{event.subscribes_count} subscribe count</small>
+                <small>{event.subscribes_count} Количество Участников</small>
               </p>
             </div>
             {!isSingleEvent && (
               <p className="ms-1 fs-6">
                 <small>
                   <Link to={`/event/${event.id}/`}>
-                    {event.boards_count} подробнее..
+                    {event.boards_count} количесвто поддержки. Подробнее..
                   </Link>
                 </small>
               </p>

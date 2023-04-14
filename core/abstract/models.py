@@ -5,6 +5,7 @@ import uuid
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 
+
 def _delete_cached_objects(app_label):
     if app_label == 'core_event':
         cache.delete('event_objects')
@@ -12,7 +13,8 @@ def _delete_cached_objects(app_label):
         cache.delete('board_objects')
     else:
         raise NotImplementedError
-    
+
+
 class AbstractManager(models.Manager):
     def get_object_by_public_id(self, public_id):
         try:
@@ -36,7 +38,8 @@ class AbstractModel(models.Model):
         ordering = ['-updated', ]
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+        self, force_insert=False,
+        force_update=False, using=None, update_fields=None
     ):
         app_label = self._meta.app_label
         print(app_label)
@@ -53,4 +56,6 @@ class AbstractModel(models.Model):
         app_label = self._meta.app_label
         if app_label in ['core_event', 'core_board']:
             _delete_cached_objects(app_label)
-        return super(AbstractModel, self).delete(using=using, keep_parents=keep_parents)
+        return super(AbstractModel, self).delete(
+                using=using, keep_parents=keep_parents
+                )
