@@ -16,10 +16,9 @@ class EventSerializer(AbstractSerializer):
     subscribes_count = serializers.SerializerMethodField()
     boards_count = serializers.SerializerMethodField()
 
-
     def get_boards_count(self, instance):
         return instance.board_set.count()
-    
+
     def get_subscribed(self, instance):
         request = self.context.get('request', None)
 
@@ -47,7 +46,9 @@ class EventSerializer(AbstractSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         admin = User.objects.get_object_by_public_id(representation['admin'])
-        representation['admin'] = UserSerializer(admin, context=self.context).data
+        representation['admin'] = UserSerializer(
+                                    admin, context=self.context
+                                ).data
         if not representation['image']:
             representation['image'] = settings.DEFAULT_AVATAR_URL
             return representation
@@ -60,7 +61,8 @@ class EventSerializer(AbstractSerializer):
 
     class Meta:
         model = Event
-        # List of all the fields that can be included in a request or a response
+        # List of all the fields that can be included in a
+        # request or a response
         fields = [
             'id',
             'admin',
@@ -68,7 +70,8 @@ class EventSerializer(AbstractSerializer):
             'edited',
             'image',
             'subscribed',
-            'subscribes_count', 
+            'subscribes_count',
+            'duration',
             'boards_count',
             'created',
             'event_data',

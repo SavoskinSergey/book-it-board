@@ -22,7 +22,8 @@ class Event(AbstractModel):
     event_data = models.DateTimeField(
         default=timezone.now
         )
-    event_limit = models.PositiveSmallIntegerField(default=0)
+    event_limit = models.PositiveSmallIntegerField(default=3)
+    duration = models.DurationField(null=True, blank=True)
 
     objects = EventManager()
 
