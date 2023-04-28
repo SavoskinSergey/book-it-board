@@ -3,7 +3,6 @@ import { Button, Modal, Form, Dropdown, Image } from "react-bootstrap";
 import axiosService from "../../helpers/axios";
 import { Context } from "../Layout";
 import DatePicker from 'react-datepicker';
-import { format, parseISO } from "date-fns";
 import 'react-datepicker/dist/react-datepicker.css';
 
 function UpdateEvent(props) {
@@ -20,15 +19,26 @@ function UpdateEvent(props) {
     event_limit: event.event_limit,
   });
   
-  console.log(form.event_data)
-  
 
   const [image, setImage] = useState();
-
+  const [imagePreview, setImagePreview] = useState(form.image);
+  
   const { setToaster } = useContext(Context);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const handleImageChange = (e) => {
+    const selectedImage = e.target.files[0];
+    setImage(selectedImage);
+
+    if (selectedImage) {
+      const imageUrl = URL.createObjectURL(selectedImage);
+      setImagePreview(imageUrl);
+    } else {
+      setImagePreview(null);
+    }
+  };
 
   const handleSubmit = (_event) => {
     _event.preventDefault();
@@ -43,7 +53,6 @@ function UpdateEvent(props) {
     const data = {
       admin: form.admin,
       body: form.body, 
-      // image: form.image, 
       event_data: form.event_data, 
       duration: form.duration, 
       event_limit: form.event_limit, 
@@ -62,6 +71,9 @@ function UpdateEvent(props) {
 
     if (image) {
       formData.append("image", image);
+    }
+    for (let pair of formData.entries()) {
+      console.log(pair[0]+ ', ' + pair[1]); 
     }
     axiosService
       .patch(`/event/${event.id}/`, formData, {
@@ -88,6 +100,8 @@ function UpdateEvent(props) {
         });
       });
   };
+  
+
 
   return (
     <>
@@ -105,29 +119,27 @@ function UpdateEvent(props) {
             onSubmit={handleSubmit}
             data-testid="update-event-form"
           >
-{/* 
 
             <Form.Group className="mb-3 d-flex flex-column">
               <Form.Label className="text-center">Image</Form.Label>
               <Image
-                src={form.image}
-                // roundedCircle
+                src={imagePreview}
                 width={220}
                 height={180}
                 className="m-2 border border-primary border-2 align-self-center"
               />
               <Form.Control
-                onChange={(e) => setImage(e.target.files[0])}
-                // onChange={(e) => setForm(...form, image: e.target.files[0])}
+                onChange={(e) => handleImageChange(e)}
                 className="w-50 align-self-center"
                 type="file"
                 size="sm"
               />
-              
               <Form.Control.Feedback type="invalid">
                 This file is required.
               </Form.Control.Feedback>
-            </Form.Group> */}
+            </Form.Group>
+
+
 
             <Form.Group className="mb-3">
               <Form.Control
@@ -145,12 +157,13 @@ function UpdateEvent(props) {
                 <DatePicker
                   name="event_data"
                   selected={form.event_data ? new Date(form.event_data) : null}
+                  dateFormat="MMMM d, yyyy hh:mm aa"
                   data-testid="event-event_data-field"
-                  onChange={(date) => setForm({ ...form, event_data: date })}
+                  onChange={(date) => setForm({ ...form, event_data: date.toISOString() })}
                   showIcon
                   minDate={new Date()}
                   showTimeSelect                  
-                  dateFormat="MMMM d, yyyy hh:mm aa"
+                  // dateFormat="MMMM d, yyyy hh:mm aa"
                 />
             </Form.Group>
 

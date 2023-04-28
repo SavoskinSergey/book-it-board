@@ -25,6 +25,21 @@ function CreateEvent(props) {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  
+  const [image, setImage] = useState();
+  const [imagePreview, setImagePreview] = useState();
+
+  const handleImageChange = (e) => {
+    const selectedImage = e.target.files[0];
+    setImage(selectedImage);
+
+    if (selectedImage) {
+      const imageUrl = URL.createObjectURL(selectedImage);
+      setImagePreview(imageUrl);
+    } else {
+      setImagePreview(null);
+    }
+  };
 
 
   const handleSubmit = (event) => {
@@ -40,18 +55,32 @@ function CreateEvent(props) {
     const data = {
       admin: user.id,
       body: form.body,
-      image: form.image,
-      event_data: form.event_data,
+      // image: form.image,
+      event_data: form.event_data.toISOString(),
       duration: form.duration,
       event_limit: form.event_limit,
     };
+    
+    const formData = new FormData();
+    // Checking for null values in the form and removing it.
+
+    Object.keys(data).forEach((key) => {
+      if (data[key]) {
+        console.log(data[key])
+        formData.append(key, data[key]);
+      }
+    });
+    if (image) {
+      formData.append("image", image);
+    }
 
     axiosService
-      .post("/event/", data, {
+      .postForm("/event/", formData, {
         headers: {
           "content-type": "multipart/form-data",
         },
       })
+
       .then(() => {
         handleClose();
         setToaster({
@@ -97,25 +126,25 @@ function CreateEvent(props) {
             data-testid="create-event-form"
           >
 
-          <Form.Group className="mb-3 d-flex flex-column">
-            <Form.Label className="text-center">Image</Form.Label>
-            <Image
-              src={form.image}
-              // roundedCircle
-              width={420}
-              height={280}
-              className="m-2 border border-primary border-2 align-self-center"
-            />
-            <Form.Control      
-              onChange={(e) => setForm({...form, image: e.target.files[0]})}
-              className="w-50 align-self-center"
-              type="file"
-              size="sm"
-            />
-            <Form.Control.Feedback type="invalid">
-              This file is required.
-            </Form.Control.Feedback>
-          </Form.Group>
+            <Form.Group className="mb-3 d-flex flex-column">
+              <Form.Label className="text-center">Image</Form.Label>
+              <Image
+                src={imagePreview}
+                width={420}
+                height={280}
+                className="m-2 border border-primary border-2 align-self-center"
+              />
+              <Form.Control
+                onChange={(e) => handleImageChange(e)}
+                className="w-50 align-self-center"
+                type="file"
+                size="sm"
+              />
+              <Form.Control.Feedback type="invalid">
+                This file is required.
+              </Form.Control.Feedback>
+            </Form.Group>
+
 
             <Form.Group className="mb-3">
               <Form.Control
