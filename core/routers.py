@@ -1,6 +1,6 @@
 from rest_framework_nested import routers
 
-from core.event.viewsets import EventViewSet
+from core.event.viewsets import EventViewSet, EventsListSet
 from core.account.viewsets import UserViewSet
 from core.auth.viewsets import (
     RegisterViewSet,
@@ -33,6 +33,8 @@ router.register(r'account', UserViewSet, basename='account')
 # ##################################################################### #
 
 router.register(r'event', EventViewSet, basename='event')
+
+router.register(r'events-stat', EventsListSet, basename='events-stat')
 
 events_router = routers.NestedSimpleRouter(router, r'event', lookup='event')
 events_router.register(r'board', BoardViewSet, basename='event-board')

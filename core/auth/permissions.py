@@ -9,12 +9,16 @@ class UserPermission(BasePermission):
         if view.basename in ['event']:
             return bool(request.user and request.user.is_authenticated)
 
+        if view.basename in ['events-stat']:
+            return bool(request.user and request.user.is_authenticated)
+
         if view.basename in ['event-board']:
             if request.method in ['DELETE']:
-                return bool(request.user.is_superuser or request.user in [obj.operator, obj.event.admin])
+                return bool(request.user.is_superuser or
+                            request.user in [obj.operator, obj.event.admin])
 
             return bool(request.user and request.user.is_authenticated)
-        
+
         if view.basename in ['account']:
             if request.method in SAFE_METHODS:
                 return True
@@ -23,7 +27,8 @@ class UserPermission(BasePermission):
         return False
 
     def has_permission(self, request, view):
-        if view.basename in ['event', 'event-board', 'account', 'auth-logout']:
+        if view.basename in ['event', 'events-stat', 'event-board',
+                             'account', 'auth-logout']:
             if request.user.is_anonymous:
                 return request.method in SAFE_METHODS
 

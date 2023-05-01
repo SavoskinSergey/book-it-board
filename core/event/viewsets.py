@@ -6,7 +6,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 
 from core.abstract.viewsets import AbstractViewSet
 from core.event.models import Event
-from core.event.serializers import EventSerializer
+from core.event.serializers import EventSerializer, EventsListSerializer
 from core.auth.permissions import UserPermission
 
 
@@ -78,3 +78,44 @@ class EventViewSet(AbstractViewSet):
         serializer = self.serializer_class(event)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class EventsListSet(AbstractViewSet):
+    http_method_names = ('get', )
+    permission_classes = (UserPermission,)
+    serializer_class = EventsListSerializer
+    filterset_fields = ['admin__public_id']
+
+    def get_queryset(self):
+        return Event.objects.all()
+
+    def get_object(self):
+        obj = Event.objects.get_object_by_public_id(self.kwargs['pk'])
+
+        self.check_object_permissions(self.request, obj)
+
+        return obj
+
+    def list(self, request, *args, **kwargs):
+        try:
+            admin_id = request.GET['admin__public_id']
+            event_objects_list = cache.get(''.join(['event_objects_list_', admin_id]))
+            if event_objects_list is None:
+                event_objects_list = self.filter_queryset(self.get_queryset())
+                cache.set(''.join(['event_objects_list_', admin_id]), event_objects)
+        except MultiValueDictKeyError:
+            event_objects = cache.get('event_objects_list')
+            if event_objects is None:
+                event_objects = self.get_queryset()
+                cache.set('event_objects_list', event_objects)
+        # if event_objects is None:
+        #     event_objects = self.filter_queryset(self.get_queryset())
+        #     cache.set('event_objects', event_objects)
+
+        page = self.paginate_queryset(event_objects)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(event_objects, many=True)
+        return Response(serializer.data)

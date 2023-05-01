@@ -39,6 +39,11 @@ function NavigationBar() {
                 <NavDropdown.Item as={Link} to={`/profile/${user.id}/`}>
                   YouProfile
                 </NavDropdown.Item>
+                
+                <NavDropdown.Item as={Link} to={`/event/`}>
+                  Статистика по событиям
+                </NavDropdown.Item>
+
                 <NavDropdown.Item >
                   CreateEvent
                   <Col sm={10} className="flex-grow-1">

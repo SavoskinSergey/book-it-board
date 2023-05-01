@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Registration from "./pages/Registration";
 import Login from "./pages/Login";
 import SingleEvent from "./pages/SingleEvent";
+import ListEvents from "./pages/ListEvents";
 import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
 
@@ -16,6 +17,14 @@ function App() {
         element={
           <ProtectedRoute>
             <Home />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/event/"
+        element={
+          <ProtectedRoute>
+            <ListEvents />
           </ProtectedRoute>
         }
       />

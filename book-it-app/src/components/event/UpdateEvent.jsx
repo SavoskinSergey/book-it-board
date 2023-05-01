@@ -157,13 +157,12 @@ function UpdateEvent(props) {
                 <DatePicker
                   name="event_data"
                   selected={form.event_data ? new Date(form.event_data) : null}
-                  dateFormat="MMMM d, yyyy hh:mm aa"
                   data-testid="event-event_data-field"
                   onChange={(date) => setForm({ ...form, event_data: date.toISOString() })}
                   showIcon
                   minDate={new Date()}
                   showTimeSelect                  
-                  // dateFormat="MMMM d, yyyy hh:mm aa"
+                  dateFormat="MMMM d, yyyy hh:mm aa"
                 />
             </Form.Group>
 
