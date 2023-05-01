@@ -99,10 +99,12 @@ class EventsListSet(AbstractViewSet):
     def list(self, request, *args, **kwargs):
         try:
             admin_id = request.GET['admin__public_id']
-            event_objects_list = cache.get(''.join(['event_objects_list_', admin_id]))
+            event_objects_list = cache.get(''.join(['event_objects_list_',
+                                                    admin_id]))
             if event_objects_list is None:
                 event_objects_list = self.filter_queryset(self.get_queryset())
-                cache.set(''.join(['event_objects_list_', admin_id]), event_objects)
+                cache.set(''.join(['event_objects_list_', admin_id]),
+                          event_objects_list)
         except MultiValueDictKeyError:
             event_objects = cache.get('event_objects_list')
             if event_objects is None:

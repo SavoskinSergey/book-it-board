@@ -1,4 +1,6 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import (AbstractBaseUser,
+                                        BaseUserManager,
+                                        PermissionsMixin)
 from django.db import models
 
 from core.abstract.models import AbstractModel, AbstractManager
@@ -13,7 +15,8 @@ def user_directory_path(instance, filename):
 class UserManager(BaseUserManager, AbstractManager):
 
     def create_user(self, username, email, password=None, **kwargs):
-        """Create and return a `User` with an email, phone number, username and password."""
+        """Create and return a `User` with an email, phone number,
+          username and password."""
         if username is None:
             raise TypeError('Users must have a username.')
         if email is None:
@@ -21,7 +24,8 @@ class UserManager(BaseUserManager, AbstractManager):
         if password is None:
             raise TypeError('User must have an email.')
 
-        user = self.model(username=username, email=self.normalize_email(email), **kwargs)
+        user = self.model(username=username,
+                          email=self.normalize_email(email), **kwargs)
         user.set_password(password)
         user.save(using=self._db)
 
@@ -52,12 +56,14 @@ class User(AbstractModel, AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=255)
 
     email = models.EmailField(db_index=True, unique=True)
-    phone_number = PhoneNumberField(unique = True, null = False, blank = False)
+    phone_number = PhoneNumberField(unique=True,
+                                    null=False, blank=False)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
 
-    avatar = models.ImageField(null=True, blank=True, upload_to=user_directory_path)
+    avatar = models.ImageField(null=True, blank=True,
+                               upload_to=user_directory_path)
     note = models.TextField(null=True, blank=True)
 
     events_subscribed = models.ManyToManyField(
@@ -72,7 +78,6 @@ class User(AbstractModel, AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f'{self.email}'
-    
 
     @property
     def name(self):
