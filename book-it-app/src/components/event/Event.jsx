@@ -9,6 +9,7 @@ import { getUser } from "../../hooks/user.actions";
 import UpdateEvent from "./UpdateEvent";
 import { Context } from "../Layout";
 import MoreToggleIcon from "../MoreToggleIcon";
+import CreateOrder from "../order/CreateOrder";
 
 function Event(props) {
   const { event, refresh, isSingleEvent } = props;
@@ -117,6 +118,7 @@ function Event(props) {
               <p className="ms-1 fs-6">
                 <small>{event.subscribes_count} Количество Участников</small>
               </p>
+       
             </div>
             {!isSingleEvent && (
               <p className="ms-1 fs-6">
@@ -129,6 +131,9 @@ function Event(props) {
             )}
           </div>
         </Card.Body>
+        
+        <CreateOrder eventId={event.id}/>
+
         <Card.Footer className="d-flex bg-white w-50 justify-content-between border-0">
           <div className="d-flex flex-row">
             <LikeOutlined

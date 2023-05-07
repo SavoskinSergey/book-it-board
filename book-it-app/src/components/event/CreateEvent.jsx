@@ -109,7 +109,7 @@ function CreateEvent(props) {
           className="py-2 rounded-pill border-primary text-primary"
           data-testid="show-modal-form"
           type="text"
-          placeholder="Write a post"
+          placeholder="Добавьте новое путешествие"
           onClick={handleShow}
         />
       </Form.Group>

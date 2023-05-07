@@ -9,6 +9,7 @@ from core.auth.viewsets import (
     LogoutViewSet
 )
 from core.board.viewsets import BoardViewSet
+from core.order.viewsets import OrderViewSet
 
 router = routers.SimpleRouter()
 
@@ -32,6 +33,7 @@ router.register(r'account', UserViewSet, basename='account')
 # ################### Event                      ###################### #
 # ##################################################################### #
 
+router.register(r'order', OrderViewSet, basename='order')
 router.register(r'event', EventViewSet, basename='event')
 
 router.register(r'events-stat', EventsListSet, basename='events-stat')

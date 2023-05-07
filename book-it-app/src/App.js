@@ -8,6 +8,8 @@ import SingleEvent from "./pages/SingleEvent";
 import ListEvents from "./pages/ListEvents";
 import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
+import ListOrders from "./pages/Orders";
+import SingleOrder from "./pages/SingleOrder";
 
 function App() {
   return (
@@ -33,6 +35,22 @@ function App() {
         element={
           <ProtectedRoute>
             <SingleEvent />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/order/"
+        element={
+          <ProtectedRoute>
+            <ListOrders />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/order/:orderId/"
+        element={
+          <ProtectedRoute>
+            <SingleOrder />
           </ProtectedRoute>
         }
       />

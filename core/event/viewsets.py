@@ -31,12 +31,12 @@ class EventViewSet(AbstractViewSet):
             admin_id = request.GET['admin__public_id']
             event_objects = cache.get(''.join(['event_objects_', admin_id]))
             if event_objects is None:
-                event_objects = self.filter_queryset(self.get_queryset())[0:5]
+                event_objects = self.filter_queryset(self.get_queryset())
                 cache.set(''.join(['event_objects_', admin_id]), event_objects)
         except MultiValueDictKeyError:
             event_objects = cache.get('event_objects')
             if event_objects is None:
-                event_objects = self.get_queryset()[0:5]
+                event_objects = self.get_queryset()
                 cache.set('event_objects', event_objects)
         # if event_objects is None:
         #     event_objects = self.filter_queryset(self.get_queryset())

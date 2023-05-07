@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 
 
-class EventConfig(AppConfig):
+class OrderConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'core.event'
-    label = 'core_event'
+    name = 'core.order'
+    label = 'core_order'

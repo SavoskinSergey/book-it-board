@@ -4,29 +4,31 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from core.abstract.viewsets import AbstractViewSet
-from core.board.models import Board
-from core.board.serializers import BoardSerializer
+from core.order.models import Order
+from core.order.serializers import OrderSerializer
 from core.auth.permissions import UserPermission
 
 
-class BoardViewSet(AbstractViewSet):
-    http_method_names = ('post', 'get', 'put', 'delete')
+class OrderViewSet(AbstractViewSet):
+    http_method_names = ('post', 'get', 'put', 'patch', 'delete')
     permission_classes = (UserPermission,)
-    serializer_class = BoardSerializer
+    serializer_class = OrderSerializer
 
     def get_queryset(self):
-        # if self.request.user.is_superuser:
-        #     return Board.objects.all()
+        if self.request.user.is_superuser:
+            return Order.objects.all()
 
         event_pk = self.kwargs['event_pk']
         if event_pk is None:
             return Http404
-        queryset = Board.objects.filter(event__public_id=event_pk)
+        queryset = Order.objects.filter(event__public_id=event_pk)
 
         return queryset
 
     def get_object(self):
-        obj = Board.objects.get_object_by_public_id(self.kwargs['pk'])
+        token = self.kwargs['pk']
+        obj = Order.objects.get(token=token)
+        # obj = Order.objects.get_object_by_public_id(self.kwargs['pk'])
 
         self.check_object_permissions(self.request, obj)
 
