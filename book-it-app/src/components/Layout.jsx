@@ -4,6 +4,7 @@ import NavigationBar from "./Navbar";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import Toaster from "./Toaster";
+import CreateMail from "./mail/CreateMail";
 
 export const Context = createContext("unknown");
 
@@ -36,6 +37,12 @@ function Layout(props) {
         )}
         <div className="container my-2">{props.children}</div>
       </div>
+      <footer className="bg-light py-3">
+          <div className="container">
+            <p className="text-center mb-0">&copy; 2023 My Website</p>
+            <CreateMail />
+          </div>
+        </footer>
       <Toaster
         title={toaster.title}
         message={toaster.message}

@@ -10,6 +10,7 @@ from core.auth.viewsets import (
 )
 from core.board.viewsets import BoardViewSet
 from core.order.viewsets import OrderViewSet
+from core.mail.viewsets import MailViewSet
 
 router = routers.SimpleRouter()
 
@@ -35,6 +36,7 @@ router.register(r'account', UserViewSet, basename='account')
 
 router.register(r'order', OrderViewSet, basename='order')
 router.register(r'event', EventViewSet, basename='event')
+router.register(r'mail', MailViewSet, basename='mail')
 
 router.register(r'events-stat', EventsListSet, basename='events-stat')
 

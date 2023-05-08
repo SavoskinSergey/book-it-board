@@ -63,7 +63,6 @@ function CreateOrder(props) {
           title: "Order Success",
         });
         setForm({});
-        refresh();
       })
       .catch(() => {
         setToaster({

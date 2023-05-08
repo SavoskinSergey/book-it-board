@@ -25,7 +25,7 @@ function TableOrder({ orders }) {
         const start = moment(order.event.event_data).format("hh:mm");
 
         return (
-            <tr>
+            <tr key={index}>
                 <td>
                     <Link to={`/order/${order.token}/`}>
                         {index+1}

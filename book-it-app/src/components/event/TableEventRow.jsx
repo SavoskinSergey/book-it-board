@@ -5,9 +5,8 @@ function TableEventRow(props) {
   const { event, key } = props;
   const date = moment(event.event_data).format("DD.MM YYYY")
   const start = moment(event.event_data).format("hh:mm")
-  console.log(props)
   return (
-    <tr>
+    <tr key={key}>
       <td>{key}</td>
       <td>{date}</td>
       <td>{start}</td>
