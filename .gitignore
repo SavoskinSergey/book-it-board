@@ -131,3 +131,4 @@ dmypy.json
 #Static
 media_store/
 static_store/
+sent_emails/
