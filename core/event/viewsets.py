@@ -1,13 +1,10 @@
-from django.conf import settings
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
 from django.core.cache import cache
-from django.core.mail import send_mail
 from django.utils.datastructures import MultiValueDictKeyError
 
 from core.abstract.viewsets import AbstractViewSet
-from core.account.models import User
 from core.event.models import Event
 from core.event.serializers import EventSerializer, EventsListSerializer
 from core.auth.permissions import UserPermission
@@ -58,17 +55,7 @@ class EventViewSet(AbstractViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         cache.delete(''.join(['event_objects_', request.data['admin']]))
-        recipient = User.objects.get_object_by_public_id(
-                request.data['admin']
-                )
-        send_mail(
-            subject='Create Event',
-            message=f'Пользователь {recipient.username} добавил событие '
-                    f'{request.data["body"]} на дату '
-                    f'{request.data["event_data"]}',
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[recipient.email],
-        )
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @action(methods=['post'], detail=True)
